@@ -29,7 +29,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
         <dependency>
-            <groupId>cn.wukq</groupId>
+            <groupId>cn.caijiajia</groupId>
             <artifactId>rate-limiter-client</artifactId>
         </dependency>
         <dependency>

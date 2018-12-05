@@ -4,6 +4,6 @@
 
 <configuration>
     <typeAliases>
-        <package name="cn.wukq.ratelimiter.server.domain"/>
+        <package name="cn.caijiajia.ratelimiter.server.domain"/>
     </typeAliases>
 </configuration>

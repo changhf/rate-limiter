@@ -129,21 +129,18 @@ public class RateLimiterService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    log.info("diff db and redis job start.....");
-                    List<RateLimiterInfo> rateLimiterInfoList = rateLimiterInfoMapper.selectAll();
-                    for (RateLimiterInfo rateLimiterInfo : rateLimiterInfoList) {
-                        stringRedisTemplate.execute(rateLimiterLua,
-                                ImmutableList.of(getKey(rateLimiterInfo.getName())),
-                                RateLimiterConstants.RATE_LIMITER_INIT_METHOD, rateLimiterInfo.getMaxPermits().toString(), rateLimiterInfo.getRate().toString(), rateLimiterInfo.getApps());
-                    }
-                    log.info("diff db and redis job end.....");
-                } catch (Exception e) {
-                    log.error("diff db and redis error.....", e);
+        executorService.scheduleAtFixedRate(() -> {
+            try {
+                log.info("diff db and redis job start.....");
+                List<RateLimiterInfo> rateLimiterInfoList = rateLimiterInfoMapper.selectAll();
+                for (RateLimiterInfo rateLimiterInfo : rateLimiterInfoList) {
+                    stringRedisTemplate.execute(rateLimiterLua,
+                            ImmutableList.of(getKey(rateLimiterInfo.getName())),
+                            RateLimiterConstants.RATE_LIMITER_INIT_METHOD, rateLimiterInfo.getMaxPermits().toString(), rateLimiterInfo.getRate().toString(), rateLimiterInfo.getApps());
                 }
+                log.info("diff db and redis job end.....");
+            } catch (Exception e) {
+                log.error("diff db and redis error.....", e);
             }
         }, 0, 1, TimeUnit.MINUTES);
     }
